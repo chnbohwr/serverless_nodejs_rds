@@ -3,7 +3,7 @@ var promise = require('bluebird');
 var options = {
   promiseLib: promise
 };
-var pgp = require('pg-promise')();
+const pgp = require('pg-promise')(options);
 const connection = {
   host: process.env.PG_HOST,
   port: process.env.PG_PORT,
@@ -11,18 +11,18 @@ const connection = {
   user: process.env.PG_USER,
   password: process.env.PG_PASSWORD
 }
-var db = pgp(connection);
+const db = pgp(connection);
 
 module.exports.getUser = (event, context, callback) => {
-  db.any('SELECT * FROM user')
-    .then((data) => {
-      callback(null, {
-        statusCode: 200,
-        body: JSON.stringify(data)
-      });
-    }).catch((error) => {
-      callback(error);
-    }).finally(() => {
-      pgp.end();
+  console.log(db);
+  db.any('SELECT * FROM users').then((data) => {
+    callback(null, {
+      statusCode: 200,
+      body: JSON.stringify(data)
     });
+  }).catch((error) => {
+    callback(error);
+  }).finally(() => {
+    pgp.end();
+  });
 };
