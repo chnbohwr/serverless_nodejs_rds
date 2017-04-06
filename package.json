@@ -4,7 +4,7 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "deploy": "serverless deploy"
+    "deploy": "serverless deploy && serverless invoke -f migration"
   },
   "author": "",
   "license": "ISC",

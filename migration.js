@@ -9,12 +9,18 @@ const knex = require('knex')({
 });
 
 module.exports.migration = (event, context, callback) => {
-  knex.migrate.latest().then(() => {
-    callback(null, {
-      statusCode: 200,
-      body: 'database migration success'
+  knex.migrate.currentVersion().then((v) => {
+    console.log('migration version', v);
+    knex.migrate.latest().then((wq) => {
+      console.log('migration success', wq);
+      callback(null, {
+        statusCode: 200,
+        body: 'database migration success'
+      });
+    }).then((e) => {
+      callback(e);
+    }).finally(()=>{
+      knex.destroy();
     });
-  }).catch((e) => {
-    callback(e);
   });
 }
